@@ -1,0 +1,58 @@
+---
+# tasks file for hostname-update
+#
+##################################################################################################################################################################################
+# Colect the facts of the target hosts
+##################################################################################################################################################################################
+- name: Collect only facts returned by facter
+  setup:
+    gather_subset:
+      - '!all'
+      - '!any'
+      - facter
+
+##################################################################################################################################################################################
+# Check the initial hostname of the VMs
+##################################################################################################################################################################################
+- name: Check the hostname of the machine
+  sell: |
+     hostnamectl | grep "Static hostname:" | cut -d ":" -f2;
+  args:
+    executable: /bin/bash
+  register: hostname_initial
+
+- name: Debug the initial hostname
+  debug:
+    var: hostname_initial
+
+##################################################################################################################################################################################
+# Change the hostname of the machine
+##################################################################################################################################################################################
+- name: Change the hostname of the machine
+  shell: |
+     hostnamectl set-hostname "{{ inventory_hostname }}";
+  args:
+    executable: /bin/bash
+
+    #echo "preserve_hostname: true" > /etc/cloud/cloud.cfg.d/99_hostname.cfg
+- name: Edit the /etc/cloud/cloud.cfg
+  lineinfile:
+   path: /etc/cloud/cloud.cfg
+   regexp: '^preserve_hostname:'
+   line: preserve_hostname: true
+
+
+##################################################################################################################################################################################
+# Check the hostname after the change
+##################################################################################################################################################################################
+- name: Check the hostname of the machine after the changes are performed
+  sell: |
+     hostnamectl | grep "Static hostname:" | cut -d ":" -f2;
+  args:
+    executable: /bin/bash
+  register: hostname_initial
+
+- name: Debug the hostname after change
+  debug:
+    var: hostname_initial
+##################################################################################################################################################################################

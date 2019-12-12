@@ -1,0 +1,22 @@
+[test_vm:children]
+vm_test_b52
+
+[prod_vm:children]
+vm_prod_b52
+vm_prod_mgc
+
+#########################
+
+[vm_test_b52]
+## B52 TEST VMs
+<hostname>	ansible_host=""
+
+
+[vm_prod_b52]
+## B52 PROD VMs
+<hostname>      ansible_host=""
+
+[vm_prod_mgc]
+## MGC PROD VMs
+<hostname>      ansible_host=""
+
