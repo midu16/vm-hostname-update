@@ -50,9 +50,9 @@
      hostnamectl | grep "Static hostname:" | cut -d ":" -f2;
   args:
     executable: /bin/bash
-  register: hostname_initial
+  register: hostname
 
 - name: Debug the hostname after change
   debug:
-    var: hostname_initial
+    var: hostname
 ##################################################################################################################################################################################
